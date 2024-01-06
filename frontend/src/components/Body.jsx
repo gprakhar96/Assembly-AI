@@ -1,15 +1,27 @@
-import React from 'react'
+
+import React, { useState } from 'react'
 import robot1 from "../utils/robot1.png"
 import robot2 from "../utils/robot2.png"
 import ChatArea from './ChatArea'
 
 const Body = () => {
+  const [state,setState] = useState('welcome')
   return (
     <div className='container1'>
      {/* image */}
-     <img className='robotimg' src={robot1} alt='' />
+     {
+      state === "welcome" ?
+      <>
+      <img className='robotimg' src={robot1} alt='' />
+      </>
+      :
+      <>
+      <img className='robotimg' src={robot2} alt='' />
+      </>
+     }
+     
      {/* chat area */}
-     <ChatArea />
+     <ChatArea changestate={setState} />
     </div>
   )
 }

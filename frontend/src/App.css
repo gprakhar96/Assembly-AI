@@ -1,3 +1,4 @@
+
 .header {
   margin: 0;
   background-color: #14213d;
@@ -10,8 +11,10 @@
   justify-content: center;
 }
 .header-name {
-  font-size: x-large;
+  font-size: 4rem;
   font-weight: bold;
+  font-family: 'Rubik Maps', system-ui;
+  margin-top: 1%;
 }
 .App {
   display: flex;
@@ -41,6 +44,7 @@
 
 .robotimg {
   height: 50%;
+  max-height: 600px;
 }
 
 .chatarea {
@@ -94,14 +98,14 @@
 }
 
 .uploadbox {
-  width: 100%;
+  width: 60%;
   margin-top:5% ;
 
 }
 
 .upload-btn {
   margin-top: 5%;
-  width: 100%;
+  width: 60%;
 }
 
 .upload-form {
@@ -109,15 +113,28 @@
 }
 
 .query-btn {
-  width: 60%;
+  width: 28%;
   margin-top: 2%;
+  margin: 2%;
 }
 
 .queryText{
   width: 60%;
-  margin-top: 5%;
+  margin-top: 3%;
 }
 
 .chatbox {
   min-height: 20rem;
+  margin-top: 3%;
+  overflow-y: 'auto';
+  margin-left: 2%;
+  margin-right: 2%;
+  word-wrap: 'break-word';
+  width: 80%;
+}
+.query-btns  {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
 }

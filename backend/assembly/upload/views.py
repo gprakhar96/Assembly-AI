@@ -51,3 +51,4 @@ def querry_view(request):
     else:
         # Return a method not allowed response for other HTTP methods
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
