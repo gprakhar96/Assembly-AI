@@ -5,6 +5,9 @@ const ChatArea = () => {
     const [state, setstate] = useState("upload")
     const [file, setFile] = useState()
     const [name, setName] = useState("")
+    const [query, setquery] = useState("")
+
+
     function getstarted() {
         setstate("askname");
     }
@@ -22,22 +25,36 @@ const ChatArea = () => {
         }
     }
 
-    function handleUpload() {
-        const url = 'http://192.168.4.210:8000/playground/hello/';
-        const formData = new FormData();
-        formData.append('manual_pdf', file);
-        // formData.append('fileName', file.name);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data',
-            },
-        };
-        axios.post(url, formData, config).then((response) => {
-            console.log(response.data);
-        })
-            .catch(() => {
-                console.log("error")
-            });
+    const handleUpload = async () => {
+        try {
+            const url = 'http://192.168.4.210:8000/playground/hello/';
+            const formData = new FormData();
+            formData.append('manual_pdf', file);
+            // formData.append('fileName', file.name);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            };
+            axios.post(url, formData, config).then((response) => {
+                console.log(response.data);
+                setstate("query")
+            })
+                .catch(() => {
+                    console.log("error")
+                });
+        }
+        catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    }
+
+    function handleQuery(event) {
+        setquery(event.target.value);
+    }
+
+    function handleQueryBtn() {
+
     }
 
     return (
@@ -65,11 +82,26 @@ const ChatArea = () => {
                                             <>
                                                 <p className='upload-heading'> Hello {name} </p>
                                                 <p className='upload-request '> Please Upload The Mannula PDF </p>
-                                                <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
-                                                <button type='submit' className='form-control btn btn-warning upload-btn' onClick={handleUpload}>Upload</button>
+                                                <form action={handleUpload}>
+                                                    <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
+                                                    <button className='form-control btn btn-warning upload-btn' type='submit'>Upload</button>
+                                                </form>
                                             </>
                                             :
-                                            <></>
+                                            <>
+                                                {
+                                                    state === "query" ?
+                                                        <>
+                                                            <div className='chatbox'>
+
+                                                            </div>
+                                                            <input className='form-control queryText' type='text' onChange={handleQuery} />
+                                                            <button className='form-control btn btn-warning query-btn' onClick={handleQueryBtn}>Enter</button>
+                                                        </>
+                                                        :
+                                                        <></>
+                                                }
+                                            </>
                                     }
                                 </>
                         }

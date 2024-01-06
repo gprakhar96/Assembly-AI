@@ -94,16 +94,30 @@
 }
 
 .uploadbox {
-  width: 60%;
+  width: 100%;
   margin-top:5% ;
 
 }
 
 .upload-btn {
   margin-top: 5%;
-  width: 60%;
+  width: 100%;
 }
 
 .upload-form {
   margin-top: 5%;
+}
+
+.query-btn {
+  width: 60%;
+  margin-top: 2%;
+}
+
+.queryText{
+  width: 60%;
+  margin-top: 5%;
+}
+
+.chatbox {
+  min-height: 20rem;
 }
