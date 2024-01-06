@@ -16,7 +16,7 @@ def upload_view(request):
     if manual_pdf and manual_pdf.content_type == 'application/pdf':
         # Temporary store the PDF file
 
-        path = default_storage.save('temp.pdf', ContentFile(manual_pdf.read()))
+        pathg = default_storage.save('temp.pdf', ContentFile(manual_pdf.read()))
         tmp_file = os.path.join(default_storage.location, path)
 
         print(tmp_file)
