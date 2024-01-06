@@ -25,36 +25,51 @@ const ChatArea = () => {
         }
     }
 
-    const handleUpload = async () => {
-        try {
-            const url = 'http://192.168.4.210:8000/playground/hello/';
+
+    const handleUpload = () => {
+        if (file) {
             const formData = new FormData();
             formData.append('manual_pdf', file);
-            // formData.append('fileName', file.name);
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data',
-                },
-            };
-            axios.post(url, formData, config).then((response) => {
-                console.log(response.data);
-                setstate("query")
+            // console.log(file)
+
+            fetch('http://127.0.0.1:8000/assembly/upload', {
+                method: 'POST',
+                body: formData,
             })
-                .catch(() => {
-                    console.log("error")
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Upload successful:', data);
+                    setstate("query");
+                })
+                .catch(error => {
+                    console.error('Error during upload:', error);
                 });
         }
-        catch (error) {
-            console.error('Error uploading file:', error);
-        }
-    }
+    };
 
     function handleQuery(event) {
         setquery(event.target.value);
     }
 
     function handleQueryBtn() {
+        if (query) {
+            const formData = new FormData();
+            formData.append('query', query);
+            // console.log(file)
 
+            fetch('http://127.0.0.1:8000/assembly/query', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Upload successful:', data);
+                    setstate("query");
+                })
+                .catch(error => {
+                    console.error('Error during upload:', error);
+                });
+        }
     }
 
     return (
@@ -82,10 +97,8 @@ const ChatArea = () => {
                                             <>
                                                 <p className='upload-heading'> Hello {name} </p>
                                                 <p className='upload-request '> Please Upload The Mannula PDF </p>
-                                                <form action={handleUpload}>
-                                                    <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
-                                                    <button className='form-control btn btn-warning upload-btn' type='submit'>Upload</button>
-                                                </form>
+                                                <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
+                                                <button className='form-control btn btn-warning upload-btn' onClick={handleUpload}>Upload</button>
                                             </>
                                             :
                                             <>
