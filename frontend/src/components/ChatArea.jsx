@@ -53,114 +53,135 @@ const ChatArea = ({ changestate }) => {
         setquery(event.target.value);
     }
 
-    const addMessage = (message, sender) => {
-        setMessages([...messages, { message, sender }]);
-    };
-    const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
-    function handleQueryBtn() {
-        if (query) {
-            // const formData = new FormData();
-            // formData.append('query', query);
-            // console.log(file)
-            // setMessages([...messages, { 'text': query, 'sender': 'You' }]);
-            
-            
-            
+    // const addMessage = (message, sender) => {
+    //     setMessages([...messages, { message, sender }]);
+    // };
+    // const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
+    // function handleQueryBtn1() {
+    //     if (query) {
 
-            fetch('https://bb1d-35-238-216-206.ngrok-free.app/assembly/process', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Upload successful:', data);
-                    // setMessages([...messages, { 'text': data['message'] + "1", 'sender': 'AI' }]);
-                    // addMessage(query, "You");
-                    // setTimeout(() => {
-                    //     addMessage(data['message'],"AI");
-                    // }, 1000);
-                    setMessages([
-                        ...messages,
-                        { sender: 'You', message: query },
-                        { sender: 'AI', message: data['message'] },
-                      ]);
-                    console.log(messages)
-                    setquery("")
-                })
-                .catch(error => {
-                    console.error('Error during upload:', error);
-                });
+    //         const myString = query
+    //         const myStringWithoutSpaces = myString.replaceAll(' ', '%20')
+    //         // console.log(myStringWithoutSpaces);
+    //         const url = "https://d486-34-105-42-141.ngrok-free.app/assembly/process?request=" + myStringWithoutSpaces
+    //         fetch(url, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded',
+    //                 // 'Accept': 'application/json',
+    //                 'Access-Control-Allow-Origin': '*',
+    //                 'Access-Control-Allow-Methods': 'POST, PUT, OPTIONS, GET',
+    //                 'Access-Control-Allow-Headers': 'Content-Type',
+    //                 'Access-Control-Max-Age': 300
+    //                  // Replace '*' with the actual origin if needed
+    //                 // Add any other CORS headers if required
+    //             },
+    // })
+
+    //             .then(response => response.json())
+    // .then(data => {
+    //     console.log('Upload successful:', data);
+
+    //     setMessages([
+    //         ...messages,
+    //         { sender: 'You', message: query },
+    //         { sender: 'AI', message: data.ans },
+    //     ]);
+    //     console.log(messages)
+    //     setquery("")
+    // })
+    // .catch(error => {
+    //     console.error('Error during upload:', error);
+    // });
+    //     }
+    // }
+
+const handleQueryBtn = async () => {
+    try {
+        const myString = query
+        const myStringWithoutSpaces = myString.replaceAll(' ', '%20')
+        // console.log(myStringWithoutSpaces);
+        const url = "https://d486-34-105-42-141.ngrok-free.app/assembly/process?request=" + myStringWithoutSpaces
+        const response = await fetch(url, {
+            method: 'GET',
+            
+        });
+        const data = await response.json();
+        setMessages([
+            ...messages,
+            { sender: 'You', message: query },
+            { sender: 'AI', message: data.ans },
+        ]);
+        // setMessages(data.ans);
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+    }
+};
+
+function handleClearChat() {
+    setMessages([]);
+}
+return (
+    <div className='chatarea'>
+
+        {
+            state === "start" ?
+                <>
+                    <h1 className='chatarea-welcome'>Welcome!</h1>
+                    <button onClick={getstarted} className='start-btn'>Get Started</button>
+                </>
+                :
+                <>
+                    {
+                        state === "askname" ?
+                            <>
+                                <h1 className='chatarea-welcome'>Welcome!</h1>
+                                <input className='form-control name-value' placeholder='Enter Name' onChange={handleSetName} />
+                                <button onClick={handleAskName} className='Askname-btn'>Continue</button>
+                            </>
+                            :
+                            <>
+                                {
+                                    state === "upload" ?
+                                        <>
+                                            <p className='upload-heading'> Hello {name} </p>
+                                            <p className='upload-request '> Please Upload The Mannula PDF </p>
+                                            <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
+                                            <button className='form-control btn btn-warning upload-btn' onClick={handleUpload}>Upload</button>
+                                        </>
+                                        :
+                                        <>
+                                            {
+                                                state === "query" ?
+                                                    <>
+                                                        <div className='chatbox'>
+                                                            {messages.map((msg, index) => (
+                                                                <div key={index}>
+                                                                    <strong>{msg.sender}:</strong> {msg.message}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        <input className='form-control queryText' type='text' onChange={handleQuery} placeholder='Enter Query' />
+                                                        <div className='query-btns'>
+                                                            <button className='form-control btn btn-warning query-btn' onClick={handleQueryBtn}>Enter</button>
+                                                            <button className='form-control btn btn-danger query-btn' onClick={handleClearChat}>Clear Chat</button>
+                                                        </div>
+
+                                                    </>
+                                                    :
+                                                    <></>
+                                            }
+                                        </>
+                                }
+                            </>
+                    }
+
+                </>
         }
-    }
+    </div>
 
 
-    function handleClearChat() {
-        setMessages([]);
-    }
-    return (
-        <div className='chatarea'>
-
-            {
-                state === "start" ?
-                    <>
-                        <h1 className='chatarea-welcome'>Welcome!</h1>
-                        <button onClick={getstarted} className='start-btn'>Get Started</button>
-                    </>
-                    :
-                    <>
-                        {
-                            state === "askname" ?
-                                <>
-                                    <h1 className='chatarea-welcome'>Welcome!</h1>
-                                    <input className='form-control name-value' placeholder='Enter Name' onChange={handleSetName} />
-                                    <button onClick={handleAskName} className='Askname-btn'>Continue</button>
-                                </>
-                                :
-                                <>
-                                    {
-                                        state === "upload" ?
-                                            <>
-                                                <p className='upload-heading'> Hello {name} </p>
-                                                <p className='upload-request '> Please Upload The Mannula PDF </p>
-                                                <input class="form-control uploadbox" type="file" id="formFile" onChange={handleFileChange}></input>
-                                                <button className='form-control btn btn-warning upload-btn' onClick={handleUpload}>Upload</button>
-                                            </>
-                                            :
-                                            <>
-                                                {
-                                                    state === "query" ?
-                                                        <>
-                                                            <div className='chatbox'>
-                                                                {messages.map((msg, index) => (
-                                                                    <div key={index}>
-                                                                        <strong>{msg.sender}:</strong> {msg.message}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                            <input className='form-control queryText' type='text' onChange={handleQuery} placeholder='Enter Query' />
-                                                            <div className='query-btns'>
-                                                                <button className='form-control btn btn-warning query-btn' onClick={handleQueryBtn}>Enter</button>
-                                                                <button className='form-control btn btn-danger query-btn' onClick={handleClearChat}>Clear Chat</button>
-                                                            </div>
-
-                                                        </>
-                                                        :
-                                                        <></>
-                                                }
-                                            </>
-                                    }
-                                </>
-                        }
-
-                    </>
-            }
-        </div>
-
-
-    )
+)
 }
 
 export default ChatArea
