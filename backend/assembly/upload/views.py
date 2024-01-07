@@ -33,11 +33,11 @@ def querry_view(request):
     if request.method == 'POST':
         try:
             # Expecting data is sent as JSON in the request body
-            data = json.loads(request.body.decode('utf-8'))
+            my_data = json.loads(request.body.decode('utf-8'))['query']
 
             # Extract data from the request as needed
             # For example, if the JSON data has a key 'querry', access it like:
-            my_data = data.get('querry')
+            # my_data = data.get('query')
 
             # My processing logic here...
 

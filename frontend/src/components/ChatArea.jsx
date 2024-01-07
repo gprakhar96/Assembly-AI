@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 // import axios from 'axios'
 
-const ChatArea = ({changestate}) => {
+const ChatArea = ({ changestate }) => {
     const [state, setstate] = useState("start")
     const [file, setFile] = useState()
     const [name, setName] = useState("")
@@ -53,23 +53,42 @@ const ChatArea = ({changestate}) => {
         setquery(event.target.value);
     }
 
+    const addMessage = (message, sender) => {
+        setMessages([...messages, { message, sender }]);
+    };
+    const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
     function handleQueryBtn() {
         if (query) {
-            const formData = new FormData();
-            formData.append('query', query);
+            // const formData = new FormData();
+            // formData.append('query', query);
             // console.log(file)
-            if (query.trim() !== '') {
-                setMessages([...messages, { text: query, sender: 'You' }]);
-                setquery('');
-            }
-            fetch('http://127.0.0.1:8000/assembly/query', {
+            // setMessages([...messages, { 'text': query, 'sender': 'You' }]);
+            
+            
+            
+
+            fetch('https://bb1d-35-238-216-206.ngrok-free.app/assembly/process', {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query }),
             })
                 .then(response => response.json())
                 .then(data => {
                     console.log('Upload successful:', data);
-                    setquery('')
+                    // setMessages([...messages, { 'text': data['message'] + "1", 'sender': 'AI' }]);
+                    // addMessage(query, "You");
+                    // setTimeout(() => {
+                    //     addMessage(data['message'],"AI");
+                    // }, 1000);
+                    setMessages([
+                        ...messages,
+                        { sender: 'You', message: query },
+                        { sender: 'AI', message: data['message'] },
+                      ]);
+                    console.log(messages)
+                    setquery("")
                 })
                 .catch(error => {
                     console.error('Error during upload:', error);
@@ -115,9 +134,9 @@ const ChatArea = ({changestate}) => {
                                                     state === "query" ?
                                                         <>
                                                             <div className='chatbox'>
-                                                                {messages.map((message, index) => (
+                                                                {messages.map((msg, index) => (
                                                                     <div key={index}>
-                                                                        <strong>{message.sender}:</strong> {message.text}
+                                                                        <strong>{msg.sender}:</strong> {msg.message}
                                                                     </div>
                                                                 ))}
                                                             </div>
@@ -126,7 +145,7 @@ const ChatArea = ({changestate}) => {
                                                                 <button className='form-control btn btn-warning query-btn' onClick={handleQueryBtn}>Enter</button>
                                                                 <button className='form-control btn btn-danger query-btn' onClick={handleClearChat}>Clear Chat</button>
                                                             </div>
-                                                            
+
                                                         </>
                                                         :
                                                         <></>
